@@ -21,26 +21,31 @@ class Solution:
 
 Approach II
 
+from collections import deque
 class Solution:
-    def findDiagonalOrder(self, mat: List[List[int]]) -> List[int]:
-        m, n = len(mat), len(mat[0])
-        res = []
-        q = deque()
-        q.append((0, 0))
-        rev = False
-
+    def matrixDiagonally(self,mat):
+        m,n=len(mat),len(mat[0])
+        visited = [[False] * n for i in range(m)]
+        res=[]
+        q=deque()
+        q.append((0,0))
+        visited[0][0] = True
+        rev=False
         while q:
-            tres = []
-            for _ in range(len(q)):
-                x, y = q.popleft()
-                tres.append(mat[x][y])
-                if y == 0 and x + 1 < m:
-                    q.append((x + 1, y))
-                if y + 1 < n:
-                    q.append((x, y + 1))
+            temp=[]
+            for i in range(len(q)):
+                x,y=q.popleft()
+                temp.append(mat[x][y])
+                if y==0 and x+1<m and not visited[x + 1][y]:
+                    q.append((x+1,y))
+                    visited[x + 1][y] = True
+                if y+1<n and not visited[x][y + 1]:
+                    q.append((x,y+1))
+                    visited[x][y + 1] = True
+            
             if rev:
-                res += tres[::-1]
+                res+=temp[::-1]
             else:
-                res += tres
-            rev = not rev
+                res+=temp[:]
+            rev=not rev
         return res
